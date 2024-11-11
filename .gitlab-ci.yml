@@ -1,0 +1,73 @@
+#22.10.24
+stages:
+  - docker_build_and_push
+  - deploy_db
+  - deploy_web
+
+variables:
+  DOCKER_REGISTRY_USER: "rldockerhub@gmail.com"
+  DOCKER_REGISTRY_PASSWORD: "Docker_hub" 
+  IMAGE_TAG: $CI_PIPELINE_IID                           
+  DB_CONTAINER_NAME: "qadimiytoshkent_DB"           # PostgreSQL container
+  WEB_CONTAINER_NAME: "qadimiy_t_web2"                  # Django container
+  IMAGE_NAME: "userhubdocker1/qadimiy_t_web2"           # Docker image
+  NETWORK_NAME: "qadimiy_network_new"                       # Docker network
+  DATABASE_NAME: "toshkent"
+  DATABASE_USER: "toshkent_user"
+  DATABASE_PASSWORD: "toshkent_password"
+  DATABASE_PORT: 5432
+  WEB_PORT: 8017
+
+# Stage 1: Build and Push Docker Image
+docker_build_and_push: 
+  tags:
+    - tarix:2
+  stage: docker_build_and_push
+  image: docker:19.03
+  services:
+    - docker:dind
+  script:
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - echo $DOCKER_REGISTRY_PASSWORD | docker login -u $DOCKER_REGISTRY_USER --password-stdin
+    - docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest
+    - docker push $IMAGE_NAME:latest
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+
+# Stage 2: Deploy PostgreSQL Database
+deploy_db:
+  tags:
+    - tarix:2
+  stage: deploy_db
+  image: docker:19.03
+  services:
+    - docker:dind                                       
+  script:
+    - docker network create $NETWORK_NAME || true
+    - docker stop $DB_CONTAINER_NAME || true
+    - docker rm $DB_CONTAINER_NAME || true
+    - docker run -d --name $DB_CONTAINER_NAME 
+        -e POSTGRES_DB=$DATABASE_NAME 
+        -e POSTGRES_USER=$DATABASE_USER 
+        -e POSTGRES_PASSWORD=$DATABASE_PASSWORD 
+        -p 5439:$DATABASE_PORT 
+        -v postgres_data:/var/lib/postgresql/data 
+        --network $NETWORK_NAME 
+        postgres:latest
+
+# Stage 3: Deploy Django Web Application
+deploy_web:
+  tags:
+    - tarix:2
+  stage: deploy_web
+  image: docker:19.03
+  services:
+    - docker:dind
+  script:
+    - docker stop $WEB_CONTAINER_NAME || true
+    - docker rm $WEB_CONTAINER_NAME || true 
+    - docker run -d --name $WEB_CONTAINER_NAME 
+        -p $WEB_PORT:8000 
+        -v static_volume:/qadimiy_t/staticfiles 
+        -v media_volume:/qadimiy_t/mediafiles 
+        --network $NETWORK_NAME 
+        $IMAGE_NAME:$IMAGE_TAG 
