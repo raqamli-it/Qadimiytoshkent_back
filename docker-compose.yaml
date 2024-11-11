@@ -5,30 +5,24 @@ services:
     build: .
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/qadimiy_t
-      - static_volume:/qadimiy_t/staticfiles
-      - media_volume:/qadimiy_t/mediafiles
+      - .:/Qadimiy_t
+      - static_volume:/Qadimiy_t/staticfiles
+      - media_volume:/Qadimiy_t/mediafiles
     ports:
-      - "8017:8000"
+      - "8001:8000"
     depends_on:
-      - qadimiytoshkent_DB
-    environment:
-      - DATABASE_HOST=qadimiytoshkent_DB
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=toshkent
-      - DATABASE_USER=toshkent_user
-      - DATABASE_PASSWORD=toshkent_password
+      - qadimiy_t_db
 
-  qadimiytoshkent_DB:  # Xizmat nomini o'zgartirish
+  qadimiy_t_db:
     image: postgres:latest
     environment:
-      POSTGRES_DB: toshkent  # 'mardex' o'rniga 'toshkent' qilish
+      POSTGRES_DB: toshkent
       POSTGRES_USER: toshkent_user
       POSTGRES_PASSWORD: toshkent_password
     ports:
-      - "5434:5432"
+      - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - /all_db/qadimiy_t_db/db:/var/lib/postgresql/data
 
 volumes:
   postgres_data:

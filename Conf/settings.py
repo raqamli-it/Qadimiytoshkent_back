@@ -174,10 +174,11 @@ DATABASES = {
         'NAME': 'toshkent',
         'USER': 'toshkent_user',
         'PASSWORD': 'toshkent_password',
-        'HOST': 'qadimiytoshkent_DB',
+        'HOST': 'qadimiy_t_db',
         'PORT': '5432',
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
