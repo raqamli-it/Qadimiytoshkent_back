@@ -174,7 +174,7 @@ DATABASES = {
         'NAME': 'toshkent',
         'USER': 'toshkent_user',
         'PASSWORD': 'toshkent_password',
-        'HOST': 'qadimiy_t_db',
+        'HOST': 'localhost', #qadimiy_t_db
         'PORT': '5432',
     }
 }
