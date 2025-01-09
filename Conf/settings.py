@@ -75,7 +75,10 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8017', 'http://localhost:8017', 'http://subdomain.qadimiytoshkent.uz']
+CSRF_TRUSTED_ORIGINS = [
+    'http://subdomain.qadimiytoshkent.uz',
+    # 'https://subdomain.qadimiytoshkent.uz'
+]
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_DOMAIN = 'subdomain.qadimiytoshkent.uz'
@@ -84,7 +87,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'language-code',
+    'x-csrftoken',
 ]
+
 
 CORS_ALLOW_ALL_ORIGINS = True
 
