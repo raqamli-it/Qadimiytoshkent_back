@@ -29,7 +29,7 @@ class ArchaeologyPictureInline(admin.TabularInline):
 
 @admin.register(ArchaeologyType)
 class ArchaeologyTypeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title_uz', 'image')
+    list_display = ('id', 'title', 'image')
     search_fields = ['title']
 
 
@@ -51,7 +51,7 @@ class ItemsAdmin(admin.ModelAdmin):
 
 @admin.register(Archaeology)
 class ArchaeologyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title',)
+    list_display = ('id', 'title_uz',)
     search_fields = ('title',)
     inlines = [ArchaeologyPictureInline]  # Inline model qo'shildi
     fields = ['title_uz', 'title_en', 'context_uz', 'context_en', 'image', 'video', 'pasport', 'video_link', 'link']
