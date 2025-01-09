@@ -29,7 +29,7 @@ class ArchaeologyPictureInline(admin.TabularInline):
 
 @admin.register(ArchaeologyType)
 class ArchaeologyTypeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'image')
+    list_display = ('id', 'title_uz', 'image')
     search_fields = ['title']
 
 
