@@ -8,7 +8,7 @@ from rest_framework import status
 
 from .models import Archaeology, Items, News, Category, ArchaeologyType
 from .serializers import NewsSerializers, CategorySerializer, ArchaeologySerializers, \
-    ArchaeologyTypeForItemSerializers, ItemsSerializers
+    ArchaeologyTypeForItemSerializers, ItemsSerializers, ArchaeologyListSerializers
 
 
 @api_view(['GET'])
@@ -251,10 +251,10 @@ def archaeology_type_category_item_detail(request, archaeology_id, category_id, 
 @permission_classes([AllowAny])
 def archaeology_list(request):
     paginator = PageNumberPagination()
-    paginator.page_size = 30
+    paginator.page_size = 20
     comments = Archaeology.objects.all().order_by("id")
     result_page = paginator.paginate_queryset(comments, request)
-    serializer = ArchaeologySerializers(result_page, many=True, context={'request': request})
+    serializer = ArchaeologyListSerializers(result_page, many=True, context={'request': request})
     serializer_url = serializer.data
     for obj_url in serializer_url:
         if obj_url.get('image'):

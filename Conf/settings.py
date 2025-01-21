@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
-from datetime import timedelta
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 from corsheaders.defaults import default_headers
@@ -75,12 +74,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=365),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
-    # Other configurations...
-}
 
 CSRF_TRUSTED_ORIGINS = [
     'http://subdomain.qadimiytoshkent.uz',

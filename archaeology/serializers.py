@@ -62,6 +62,22 @@ class ArchaeologySerializers(serializers.ModelSerializer):
         return data
 
 
+class ArchaeologyListSerializers(serializers.ModelSerializer):
+    archaeologyPicture = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Archaeology
+        fields = ['id', 'title_uz', 'title_en', 'image' ]
+
+    def get_archaeologyPicture(self, obj):
+        request = self.context.get('request')
+        data = ArchaeologyPictureSerializer(obj.archaeologyPicture.all(), many=True, context={'request': request}).data
+        for obj_url in data:
+            if obj_url.get('image') and request is not None:
+                obj_url['image'] = request.build_absolute_uri(obj_url['image'])
+        return data
+
+
 class NewsPictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewsPicture
