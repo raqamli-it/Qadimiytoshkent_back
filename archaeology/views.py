@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 
 from .models import Archaeology, Items, News, Category, ArchaeologyType
+from .pagination import ResultsSetPagination
 from .serializers import NewsSerializers, CategorySerializer, ArchaeologySerializers, \
     ArchaeologyTypeForItemSerializers, ItemsSerializers, ArchaeologyListSerializers
 
@@ -41,7 +42,6 @@ def items_list(request):
     serializer = ItemsSerializers(result_page, many=True, context={'request': request})
 
     return paginator.get_paginated_response(serializer.data)
-
 
 
 @api_view(['GET'])
@@ -100,9 +100,6 @@ def news_detail(request, pk):
     return Response(serializer_data)  # 111
 
 
-
-
-
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def archaeology_type_list(request):
@@ -129,6 +126,7 @@ def archaeology_type_detail(request, archaeology_id):
 
     return Response(serializer_data)
 
+
 # ArchaeologyType bo'yicha items ro'yxati
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -144,6 +142,7 @@ def archaeology_type_items_list(request, archaeology_id):
 
     return Response(serialized_data)
 
+
 # ArchaeologyType va item detail
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -157,6 +156,7 @@ def archaeology_type_item_detail(request, archaeology_id, item_id):
         serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
 
     return Response(serializer_data)
+
 
 # ArchaeologyType bo'yicha kategoriyalar ro'yxati
 @api_view(['GET'])
@@ -187,6 +187,7 @@ def archaeology_type_category_items_list(request, archaeology_id, category_id):
 
     return Response(serializer_data)
 
+
 # ArchaeologyType, kategoriya va item detail
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -197,14 +198,6 @@ def archaeology_type_category_item_detail(request, archaeology_id, category_id, 
     if serializer_data.get('image'):
         serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
     return Response(serializer_data)
-
-
-
-
-
-
-
-
 
 
 # @api_view(['GET'])
@@ -237,29 +230,24 @@ def archaeology_type_category_item_detail(request, archaeology_id, category_id, 
 #     return Response(serializer.data)
 
 
-
-
-
-
-
-
-
-
-
 # Archaeology list
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def archaeology_list(request):
-    paginator = PageNumberPagination()
-    paginator.page_size = 20
-    comments = Archaeology.objects.all().order_by("id")
-    result_page = paginator.paginate_queryset(comments, request)
-    serializer = ArchaeologyListSerializers(result_page, many=True, context={'request': request})
-    serializer_url = serializer.data
-    for obj_url in serializer_url:
-        if obj_url.get('image'):
-            obj_url['image'] = request.build_absolute_uri(obj_url['image'])
-    return Response(serializer_url)
+    queryset = Archaeology.objects.all().order_by("id")
+    paginator = ResultsSetPagination()
+    paginated_queryset = paginator.paginate_queryset(queryset, request)
+
+    serializer = ArchaeologyListSerializers(paginated_queryset, many=True, context={'request': request})
+    serializer_data = serializer.data
+
+    # Image URL to absolute
+    for obj in serializer_data:
+        if obj.get('image'):
+            obj['image'] = request.build_absolute_uri(obj['image'])
+
+    return paginator.get_paginated_response(serializer_data)
+
 
 # Archaeology detail
 @api_view(['GET'])
@@ -268,10 +256,13 @@ def archaeology_detail(request, archaeology_id):
     archaeology = get_object_or_404(Archaeology, id=archaeology_id)
     serializer = ArchaeologySerializers(archaeology, context={'request': request})
     serializer_data = serializer.data
+
+    # Image URL to absolute
     if serializer_data.get('image'):
         serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
 
     return Response(serializer_data)
+
 
 # Archaeology bo'yicha items ro'yxati
 @api_view(['GET'])
@@ -288,6 +279,7 @@ def archaeology_items_list(request, archaeology_id):
 
     return Response(serialized_data)
 
+
 # Archaeology va item detail
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -300,6 +292,7 @@ def archaeology_item_detail(request, archaeology_id, item_id):
         serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
 
     return Response(serializer_data)
+
 
 # Archaeology bo'yicha kategoriyalar ro'yxati
 @api_view(['GET'])
@@ -344,30 +337,3 @@ def archaeology_category_item_detail(request, archaeology_id, category_id, item_
         serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
 
     return Response(serializer_data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
