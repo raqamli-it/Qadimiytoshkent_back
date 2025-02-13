@@ -1,30 +1,51 @@
 from django.contrib import admin
+from archaeology.models import (
+    News, NewsPicture, Items, ItemsPicture, ArchaeologyPicture,
+    ArchaeologyType, Archaeology, Category
+)
 
-from .models import Archaeology, Items, News, ArchaeologyPicture, \
-    NewsPicture, ItemsPicture, Category, ArchaeologyType
+
+class PictureInline(admin.TabularInline):
+    extra = 1
 
 
-class NewsPictureTabularInline(admin.TabularInline):
+class NewsPictureInline(PictureInline):
     model = NewsPicture
-    fields = ['image']
+
+
+class ItemsPictureInline(PictureInline):
+    model = ItemsPicture
+
+
+class ArchaeologyPictureInline(PictureInline):
+    model = ArchaeologyPicture
 
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title_uz',)
-    # inlines = [NewsVideoTabularInline, NewsPictureTabularInline]
-    inlines = [NewsPictureTabularInline]
-    fields = ['title_uz', 'title_en', 'context_uz', 'context_en', 'image', ]
+    list_display = ('id', 'title_uz')
+    search_fields = ('title_uz', 'title_en')
+    inlines = [NewsPictureInline]
+    fields = ['title_uz', 'title_en', 'context_uz', 'context_en', 'image']
 
 
-class Items_PictureInline(admin.TabularInline):
-    model = ItemsPicture
-    extra = 1  # Ko'proq qatorlar yaratish uchun optional
+@admin.register(Items)
+class ItemsAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title_uz', 'archaeology', 'category', 'archaeology_type')
+    search_fields = ('title_uz', 'title_en')
+    inlines = [ItemsPictureInline]
+    fields = ['title_uz', 'title_en', 'context_uz', 'context_en', 'image', 'video',
+              'video_link', 'link', 'archaeology', 'category', 'archaeology_type']
+    # autocomplete_fields = ['archaeology', 'category', 'archaeology_type']
 
 
-class ArchaeologyPictureInline(admin.TabularInline):
-    model = ArchaeologyPicture
-    extra = 1
+@admin.register(Archaeology)
+class ArchaeologyAdmin(admin.ModelAdmin):
+    list_display = ('id', 'title_uz')
+    search_fields = ('title_uz', 'title_en')
+    inlines = [ArchaeologyPictureInline]
+    fields = ['title_uz', 'title_en', 'context_uz', 'context_en', 'image',
+              'video', 'pasport', 'video_link', 'link']
 
 
 @admin.register(ArchaeologyType)
@@ -33,33 +54,8 @@ class ArchaeologyTypeAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 
-@admin.register(Items)
-class ItemsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'archaeology', 'category', 'archaeology_type',)  # Modeldagi asosiy fieldlar
-    inlines = [Items_PictureInline]  # Inline modellar qo'shildi
-    fields = ('title_uz', 'title_en', 'context_uz', 'context_en', 'image', 'video', 'video_link', 'link', 'archaeology',
-              'category', 'archaeology_type',)
-    autocomplete_fields = ['archaeology', 'category',
-                           'archaeology_type', ]  # ForeignKey bo'lgan maydonlar uchun autocomplete
-
-    def archaeology(self, obj):
-        return obj.archaeology
-
-    def category(self, obj):
-        return obj.category
-
-
-@admin.register(Archaeology)
-class ArchaeologyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title_uz',)
-    search_fields = ('title',)
-    inlines = [ArchaeologyPictureInline]  # Inline model qo'shildi
-    fields = ['title_uz', 'title_en', 'context_uz', 'context_en', 'image', 'video', 'pasport', 'video_link', 'link']
-
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name_uz', 'name_en')
     search_fields = ('name_uz', 'name_en')
     fields = ['name_uz', 'name_en', 'image', 'icon', 'archaeology_type']
-

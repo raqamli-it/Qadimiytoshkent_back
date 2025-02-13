@@ -22,7 +22,7 @@ class Archaeology(models.Model):
         verbose_name_plural = 'Archaeology'
 
     def __str__(self):
-        return self.title
+        return self.title_uz
 
 
 class ArchaeologyPicture(models.Model):
@@ -52,10 +52,7 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
 
     def __str__(self):
-        return self.name
-
-
-
+        return self.name_uz
 
 
 class Items(models.Model):
@@ -78,7 +75,7 @@ class Items(models.Model):
         verbose_name_plural = 'Items'
 
     def __str__(self):
-        return self.title
+        return self.title_uz
 
 
 class ItemsPicture(models.Model):
@@ -99,7 +96,7 @@ class News(models.Model):
         verbose_name_plural = 'News'
 
     def __str__(self):
-        return self.title or ''
+        return self.title
 
 
 class NewsPicture(models.Model):
