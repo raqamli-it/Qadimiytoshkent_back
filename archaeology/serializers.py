@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Archaeology, Items, News, ArchaeologyPicture, ItemsPicture, NewsPicture, Category, ArchaeologyType
+from .models import Archaeology, Items, News, ArchaeologyPicture, ItemsPicture, NewsPicture, Category
 
 
 class ArchaeologyPictureSerializer(serializers.ModelSerializer):
@@ -19,7 +19,7 @@ class ItemsSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Items
-        fields = ['id', 'title_uz', 'title_en', 'context_uz', 'context_en', 'image', 'video', 'video_link', 'create',
+        fields = ['id', 'title_uz', 'title_en', 'context_uz', 'context_en', 'image',  'video_link', 'create',
                   'update', 'picture_items', 'category']
 
     def get_picture_items(self, obj):
@@ -38,11 +38,6 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name', 'image', 'icon', 'items']
 
-
-class ArchaeologyTypeForItemSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = ArchaeologyType
-        fields = ['id', 'title', 'image', ]
 
 
 class ArchaeologySerializers(serializers.ModelSerializer):

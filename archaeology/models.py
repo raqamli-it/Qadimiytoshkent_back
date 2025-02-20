@@ -33,19 +33,19 @@ class ArchaeologyPicture(models.Model):
                              blank=True, null=True)
 
 
-class ArchaeologyType(models.Model):
-    title = models.CharField(max_length=60)
-    image = models.FileField(upload_to='image', blank=True, null=True)
+# class ArchaeologyType(models.Model):
+#     title = models.CharField(max_length=60)
+#     image = models.FileField(upload_to='image', blank=True, null=True)
 
-    def __str__(self):
-        return self.title
+#     def __str__(self):
+#         return self.title
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='image/', blank=True, null=True)
     icon = models.ImageField(upload_to='icon/', blank=True, null=True)
-    archaeology_type = models.ForeignKey(ArchaeologyType, null=True, blank=True, on_delete=models.CASCADE)  # Make optional
+    # archaeology_type = models.ForeignKey(ArchaeologyType, null=True, blank=True, on_delete=models.CASCADE)  # Make optional
 
     class Meta:
         verbose_name = 'Category'
@@ -58,7 +58,6 @@ class Category(models.Model):
 class Items(models.Model):
     title = models.CharField(max_length=60)
     context = RichTextField(blank=True, null=True)
-    video = models.FileField(upload_to='videos/', blank=True, null=True)
     video_link = models.URLField(blank=True, null=True)
     link = models.URLField(blank=True, null=True)
     view_count = models.PositiveIntegerField(default=0, blank=True, null=True)
@@ -66,9 +65,9 @@ class Items(models.Model):
     archaeology = models.ForeignKey(Archaeology, on_delete=models.CASCADE, related_name='items_set', blank=True,
                                     null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='items', blank=True, null=True)
-    archaeology_type = models.ForeignKey(ArchaeologyType, on_delete=models.CASCADE, related_name='items_type', blank=True, null=True)
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
+    
 
     class Meta:
         verbose_name = 'Item'

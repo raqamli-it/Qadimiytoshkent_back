@@ -3,13 +3,11 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-
 from rest_framework import status
-
-from .models import Archaeology, Items, News, Category, ArchaeologyType
+from .models import Archaeology, Items, News, Category
 from .pagination import ResultsSetPagination
 from .serializers import NewsSerializers, CategorySerializer, ArchaeologySerializers, \
-    ArchaeologyTypeForItemSerializers, ItemsSerializers, ArchaeologyListSerializers
+     ItemsSerializers, ArchaeologyListSerializers
 
 
 @api_view(['GET'])
@@ -100,104 +98,98 @@ def news_detail(request, pk):
     return Response(serializer_data)  # 111
 
 
+
+
+
+# Ashyolarning list ro'yxati 
+# Items List API
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def archaeology_type_list(request):
-    archaeology_types = ArchaeologyType.objects.all()
-    serializer = ArchaeologyTypeForItemSerializers(archaeology_types, many=True)
-    serializer_url = serializer.data
-    for obj_url in serializer_url:
-        # Process image field for News model
-        if obj_url.get('image'):
-            obj_url['image'] = request.build_absolute_uri(obj_url['image'])
+def items_list(request):
+    queryset = Items.objects.all().order_by("id")
+    paginator = ResultsSetPagination()
+    paginated_queryset = paginator.paginate_queryset(queryset, request)
 
-    return Response(serializer_url)
-
-
-# ArchaeologyType detail
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def archaeology_type_detail(request, archaeology_id):
-    archaeology_type = get_object_or_404(ArchaeologyType, id=archaeology_id)
-    serializer = ArchaeologyTypeForItemSerializers(archaeology_type, context={'request': request})
+    serializer = ItemsSerializers(paginated_queryset, many=True, context={'request': request})
     serializer_data = serializer.data
-    if serializer_data.get('image'):
-        serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
 
-    return Response(serializer_data)
-
-
-# ArchaeologyType bo'yicha items ro'yxati
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def archaeology_type_items_list(request, archaeology_id):
-    archaeology = get_object_or_404(ArchaeologyType, id=archaeology_id)
-    items = archaeology.items_type.all()
-    serializer = ItemsSerializers(items, many=True, context={'request': request})
-
-    serialized_data = serializer.data
-    for obj in serialized_data:
+    # Image URL to absolute
+    for obj in serializer_data:
         if obj.get('image'):
             obj['image'] = request.build_absolute_uri(obj['image'])
 
-    return Response(serialized_data)
+    return paginator.get_paginated_response(serializer_data)
 
 
-# ArchaeologyType va item detail
+# Items Detail API
 @api_view(['GET'])
 @permission_classes([AllowAny])
-def archaeology_type_item_detail(request, archaeology_id, item_id):
-    item = get_object_or_404(Items, archaeology_type_id=archaeology_id, id=item_id)
+def item_detail(request, pk):
+    item = get_object_or_404(Items, pk=pk)
     serializer = ItemsSerializers(item, context={'request': request})
-    serializer_data = serializer.data
+    data = serializer.data
 
-    # Convert the image field to an absolute URL if it exists
-    if serializer_data.get('image'):
-        serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
+    # Image URL to absolute
+    if data.get('image'):
+        data['image'] = request.build_absolute_uri(data['image'])
 
-    return Response(serializer_data)
+    return Response(data)
+
+# ArchaeologyType va item detail
+# @api_view(['GET'])
+# @permission_classes([AllowAny])
+# def archaeology_type_item_detail(request, archaeology_id, item_id):
+#     item = get_object_or_404(Items, archaeology_type_id=archaeology_id, id=item_id)
+#     serializer = ItemsSerializers(item, context={'request': request})
+#     serializer_data = serializer.data
+
+#     # Convert the image field to an absolute URL if it exists
+#     if serializer_data.get('image'):
+#         serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
+
+#     return Response(serializer_data)
 
 
 # ArchaeologyType bo'yicha kategoriyalar ro'yxati
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def archaeology_type_categories_list(request, archaeology_id):
-    categories = Category.objects.filter(items__archaeology_type_id=archaeology_id).distinct()
-    serializer = CategorySerializer(categories, many=True, context={'request': request})
-    serialized_data = serializer.data
-    for obj in serialized_data:
-        if obj.get('image'):
-            obj['image'] = request.build_absolute_uri(obj['image'])
+# @api_view(['GET'])
+# @permission_classes([AllowAny])
+# def archaeology_type_categories_list(request, archaeology_id):
+#     categories = Category.objects.filter(items__archaeology_type_id=archaeology_id).distinct()
+#     serializer = CategorySerializer(categories, many=True, context={'request': request})
+#     serialized_data = serializer.data
+#     for obj in serialized_data:
+#         if obj.get('image'):
+#             obj['image'] = request.build_absolute_uri(obj['image'])
 
-    return Response(serialized_data)
+#     return Response(serialized_data)
 
 
 # ArchaeologyType va kategoriya bo'yicha items ro'yxati
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def archaeology_type_category_items_list(request, archaeology_id, category_id):
-    items = Items.objects.filter(archaeology_type_id=archaeology_id, category_id=category_id)
-    serializer = ItemsSerializers(items, many=True, context={'request': request})
-    serializer_data = serializer.data
+# @api_view(['GET'])
+# @permission_classes([AllowAny])
+# def archaeology_type_category_items_list(request, archaeology_id, category_id):
+#     items = Items.objects.filter(archaeology_type_id=archaeology_id, category_id=category_id)
+#     serializer = ItemsSerializers(items, many=True, context={'request': request})
+#     serializer_data = serializer.data
 
-    # Har bir element bo'yicha image URL ni to'liq qaytarish
-    for item in serializer_data:
-        if item.get('image'):
-            item['image'] = request.build_absolute_uri(item['image'])
+#     # Har bir element bo'yicha image URL ni to'liq qaytarish
+#     for item in serializer_data:
+#         if item.get('image'):
+#             item['image'] = request.build_absolute_uri(item['image'])
 
-    return Response(serializer_data)
+#     return Response(serializer_data)
 
 
 # ArchaeologyType, kategoriya va item detail
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def archaeology_type_category_item_detail(request, archaeology_id, category_id, item_id):
-    item = get_object_or_404(Items, archaeology_type_id=archaeology_id, category_id=category_id, id=item_id)
-    serializer = ItemsSerializers(item, context={'request': request})
-    serializer_data = serializer.data
-    if serializer_data.get('image'):
-        serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
-    return Response(serializer_data)
+# @api_view(['GET'])
+# @permission_classes([AllowAny])
+# def archaeology_type_category_item_detail(request, archaeology_id, category_id, item_id):
+#     item = get_object_or_404(Items, archaeology_type_id=archaeology_id, category_id=category_id, id=item_id)
+#     serializer = ItemsSerializers(item, context={'request': request})
+#     serializer_data = serializer.data
+#     if serializer_data.get('image'):
+#         serializer_data['image'] = request.build_absolute_uri(serializer_data['image'])
+#     return Response(serializer_data)
 
 
 # @api_view(['GET'])
