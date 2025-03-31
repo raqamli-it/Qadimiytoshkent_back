@@ -76,12 +76,12 @@ MIDDLEWARE = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://subdomain.qadimiytoshkent.uz',
+    'http://subdomain.eskitoshkent.uz',
     # 'https://subdomain.qadimiytoshkent.uz'
 ]
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_DOMAIN = 'subdomain.qadimiytoshkent.uz'
+CSRF_COOKIE_DOMAIN = 'subdomain.eskitoshkent.uz'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
