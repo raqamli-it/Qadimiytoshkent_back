@@ -35,7 +35,16 @@ def category_detail(request, pk):
 def items_list(request):
     paginator = PageNumberPagination()
     paginator.page_size = 20
-    comments = Items.objects.all().order_by("id")
+
+    # Foydalanuvchi so‘rovdan kategoriya parametrini oladi
+    category_id = request.GET.get('category')
+
+    # Agar category ID berilgan bo‘lsa, unga qarab filterlaymiz
+    if category_id:
+        comments = Items.objects.filter(category_id=category_id).order_by("id")
+    else:
+        comments = Items.objects.all().order_by("id")
+
     result_page = paginator.paginate_queryset(comments, request)
     serializer = ItemsSerializers(result_page, many=True, context={'request': request})
 
