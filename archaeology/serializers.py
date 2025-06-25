@@ -14,8 +14,16 @@ class ItemsPictureSerializer(serializers.ModelSerializer):
         fields = ['id', 'image', 'link']
 
 
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'image', 'icon', 'items']
+
 class ItemsSerializers(serializers.ModelSerializer):
     picture_items = serializers.SerializerMethodField()
+    category = CategorySerializer(read_only=True)
+
 
     class Meta:
         model = Items
@@ -31,12 +39,7 @@ class ItemsSerializers(serializers.ModelSerializer):
         return data
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    items = ItemsSerializers(many=True, read_only=True)
 
-    class Meta:
-        model = Category
-        fields = ['id', 'name', 'image', 'icon', 'items']
 
 
 
