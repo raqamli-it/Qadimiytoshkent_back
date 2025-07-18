@@ -12,7 +12,7 @@ class AboutSerializer(serializers.ModelSerializer):
 class OlimlarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Olimlar
-        fields = ['id', 'fullname_uz', 'fullname_en', 'pasition_uz', 'pasition_en', 'image', ]
+        fields = ['id', 'fullname_uz', 'fullname_en', 'pasition_uz', 'pasition_en','degree_uz', 'degree_en', 'image', ]
 
 
 class KutubxonaSerializer(serializers.ModelSerializer):

@@ -9,7 +9,7 @@ class AboutTranslationOptions(TranslationOptions):
 
 @register(Olimlar)
 class OlimlarTranslationOptions(TranslationOptions):
-    fields = ('fullname', 'pasition',)
+    fields = ('fullname', 'pasition', 'degree')
 
 
 @register(Kutubxona)

@@ -11,7 +11,7 @@ class AboutAdmin(admin.ModelAdmin):
 @admin.register(Olimlar)
 class OlimlarAdmin(admin.ModelAdmin):
     list_display = ('fullname_uz',)
-    fields = ('fullname_uz', 'fullname_en', 'pasition_uz', 'pasition_en', 'image',)
+    fields = ('fullname_uz', 'fullname_en', 'pasition_uz', 'pasition_en', 'degree_uz', 'degree_en', 'image',)
 
 
 @admin.register(Muzeylar)

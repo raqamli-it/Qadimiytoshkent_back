@@ -9,6 +9,7 @@ class About(models.Model):
 class Olimlar(models.Model):
     fullname = models.CharField(max_length=150)
     pasition = models.CharField(max_length=200)
+    degree = models.CharField(max_length=200)
     image = models.FileField(upload_to='image/', blank=True, null=True)
 
 
