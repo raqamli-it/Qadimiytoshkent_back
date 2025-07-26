@@ -89,10 +89,13 @@ class News(models.Model):
     image = models.FileField(upload_to='image', blank=True, null=True)
     create = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
+    order = models.PositiveIntegerField(default=0)
+
 
     class Meta:
         verbose_name = 'New'
         verbose_name_plural = 'News'
+        ordering = ['-order']  # Bu eng katta orderni birinchi chiqaradi
 
     def __str__(self):
         return self.title

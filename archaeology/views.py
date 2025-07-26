@@ -69,7 +69,7 @@ def items_detail(request, pk):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def news_list(request):
-    comments = News.objects.all().order_by("id")
+    comments = News.objects.all().order_by("-order")
     serializer = NewsSerializers(comments, many=True)
     serializer_url = serializer.data
     for obj_url in serializer_url:

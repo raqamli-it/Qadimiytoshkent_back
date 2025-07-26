@@ -23,8 +23,9 @@ class ArchaeologyPictureInline(PictureInline):
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title_uz')
+    list_display = ('id', 'order','title_uz')
     search_fields = ('title_uz', 'title_en')
+    ordering = ['-order']
     inlines = [NewsPictureInline]
     fields = ['title_uz', 'title_en', 'context_uz', 'context_en', 'image']
 
