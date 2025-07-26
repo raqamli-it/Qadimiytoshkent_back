@@ -27,7 +27,7 @@ class NewsAdmin(admin.ModelAdmin):
     search_fields = ('title_uz', 'title_en')
     ordering = ['-order']
     inlines = [NewsPictureInline]
-    fields = ['title_uz', 'title_en', 'context_uz', 'context_en', 'image']
+    fields = ['title_uz', 'title_en', 'order', 'context_uz', 'context_en', 'image']
 
 
 @admin.register(Items)
