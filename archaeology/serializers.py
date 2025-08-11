@@ -5,7 +5,7 @@ from .models import Archaeology, Items, News, ArchaeologyPicture, ItemsPicture, 
 class ArchaeologyPictureSerializer(serializers.ModelSerializer):
     class Meta:
         model = ArchaeologyPicture
-        fields = ['id', 'title', 'image', 'link']
+        fields = ['id', 'title', 'image', 'link', 'order']
 
 
 class ItemsPictureSerializer(serializers.ModelSerializer):

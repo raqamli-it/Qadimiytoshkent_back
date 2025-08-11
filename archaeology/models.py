@@ -29,10 +29,13 @@ class ArchaeologyPicture(models.Model):
     title = models.CharField(max_length=200)
     image = models.FileField(upload_to='image', blank=True, null=True)
     link = models.URLField(verbose_name='link', blank=True, null=True)
+    order = models.PositiveIntegerField(default=0)  # tartib raqami
     name = models.ForeignKey(Archaeology, on_delete=models.CASCADE, related_name='archaeologyPicture',
                              blank=True, null=True)
 
-
+    class Meta:
+        ordering = ['order']  # default tartib
+        
 # class ArchaeologyType(models.Model):
 #     title = models.CharField(max_length=60)
 #     image = models.FileField(upload_to='image', blank=True, null=True)
