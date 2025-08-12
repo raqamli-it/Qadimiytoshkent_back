@@ -27,6 +27,7 @@ class NewsAdmin(admin.ModelAdmin):
     search_fields = ('title_uz', 'title_en')
     ordering = ['-order']
     inlines = [NewsPictureInline]
+    readonly_fields = ('create', 'update')   # ← shu satr muammoni hal qiladi
     fields = ['title_uz', 'title_en', 'order', 'context_uz', 'context_en', 'image', 'create', 'update']
 
 
