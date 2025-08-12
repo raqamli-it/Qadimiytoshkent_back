@@ -90,8 +90,8 @@ class News(models.Model):
     title = models.CharField(max_length=60)
     context = RichTextField(blank=True, null=True)
     image = models.FileField(upload_to='image', blank=True, null=True)
-    create = models.DateTimeField(auto_now_add=True)
-    update = models.DateTimeField(auto_now=True)
+    create = models.DateTimeField()
+    update = models.DateTimeField()
     order = models.PositiveIntegerField(default=0)
 
 
