@@ -87,7 +87,7 @@ class ItemsPicture(models.Model):
 
 
 class News(models.Model):
-    title = models.CharField(max_length=60)
+    title = models.TextField()
     context = RichTextField(blank=True, null=True)
     image = models.FileField(upload_to='image', blank=True, null=True)
     create = models.DateTimeField()
